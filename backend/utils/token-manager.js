@@ -9,11 +9,7 @@ exports.createToken = (id, email, expiresIn) => {
   return token;
 };
 
-exports.verifyToken = async (
-  req,
-  res,
-  next
-) => {
+exports.verifyToken = async (req, res, next) => {
   const token = req.signedCookies[`${COOKIE_NAME}`];
   if (!token || token.trim() === "") {
     return res.status(401).json({ message: "Token Not Received" });

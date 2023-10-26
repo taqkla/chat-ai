@@ -1,5 +1,5 @@
 const User = require("../models/User.js");
-const { openai } = require("../config/openai-config.js");
+const { openAiConfig } = require("../config/openai-config.js");
 exports.generateChatCompletion = async (req, res, next) => {
   const { message } = req.body;
   try {
@@ -17,12 +17,12 @@ exports.generateChatCompletion = async (req, res, next) => {
     user.chats.push({ content: message, role: "user" });
 
     // send all chats with new one to openAI API
-    // const config = configureOpenAI();
+    const openai = openAiConfig();
     // const openai = new OpenAI({
     //   apiKey: process.env.OPEN_AI_SECRET,
     //   organization: process.env.OPENAI_ORAGANIZATION_ID,
     // });
-    // get latest response
+    // get latest response  
     const chatResponse = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: chats,
@@ -63,7 +63,6 @@ exports.deleteChats = async (req, res, next) => {
     if (user._id.toString() !== res.locals.jwtData.id) {
       return res.status(401).send("Permissions didn't match");
     }
-    //@ts-ignore
     user.chats = [];
     await user.save();
     return res.status(200).json({ message: "OK" });
